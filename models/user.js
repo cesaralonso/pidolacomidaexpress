@@ -125,17 +125,6 @@ User.exist = (userId, next) => {
     })
 };
 
-User.insert = (user, next) => {
-    if ( !connection )
-        return next('Connection refused');
-        connection.query(`INSERT INTO user SET ?`, [user], (error, result) => {
-        if ( error ) 
-            return next({ success: false, error: error })
-        else 
-            return next( null, { success: true, result: result });
-    });
-};
-
 User.update = (user, next) => {
     if ( !connection )
         return next('Connection refused');

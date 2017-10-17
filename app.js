@@ -3,7 +3,7 @@ const connection = require('./config/db-connection');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
-var passport = require('passport');
+const passport = require('passport');
 
 //Route importation.
 const platillo = require('./routes/platillos');
@@ -24,8 +24,7 @@ app.use(passport.initialize());
 // Call passport Strategy
 require('./config/passport')(passport);
 
-
-// Routes
+// Warehouses
 app.use('/platillo', platillo);
 app.use('/ciudad', ciudad);
 app.use('/user', user);
