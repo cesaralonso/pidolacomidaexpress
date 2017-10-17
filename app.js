@@ -8,6 +8,7 @@ const passport = require('passport');
 //Route importation.
 const rol = require('./routes/roles');
 const user = require('./routes/users');
+const combo = require('./routes/combos');
 const ciudad = require('./routes/ciudades');
 const telefono = require('./routes/telefonos');
 const platillo = require('./routes/platillos');
@@ -30,6 +31,7 @@ require('./config/passport')(passport);
 // Warehouses
 app.use('/rol', rol);
 app.use('/user', user);
+app.use('/combo', combo);
 app.use('/ciudad', ciudad);
 app.use('/telefono', telefono);
 app.use('/platillo', platillo);
