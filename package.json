@@ -18,7 +18,9 @@
     "jsonwebtoken": "^8.0.1",
     "moment": "^2.18.1",
     "mysql": "^2.14.1",
-    "object.values": "^1.0.4"
+    "object.values": "^1.0.4",
+    "passport": "^0.4.0",
+    "passport-jwt": "^3.0.0"
   },
   "devDependencies": {
     "morgan": "^1.8.2"
