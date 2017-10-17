@@ -127,7 +127,7 @@ ENGINE = InnoDB;
 -- Table `pidolacomida`.`user`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pidolacomida`.`user` (
-  `iduser` INT NOT NULL,
+  `iduser` INT NOT NULL AUTO_INCREMENT,
   `nombres` VARCHAR(45) NOT NULL,
   `apellidos` VARCHAR(45) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
