@@ -6,9 +6,12 @@ const morgan = require('morgan');
 const passport = require('passport');
 
 //Route importation.
-const platillo = require('./routes/platillos');
-const ciudad = require('./routes/ciudades');
+const rol = require('./routes/roles');
 const user = require('./routes/users');
+const ciudad = require('./routes/ciudades');
+const telefono = require('./routes/telefonos');
+const platillo = require('./routes/platillos');
+const restaurante = require('./routes/restaurantes');
 
 // Express Instance
 const app = express();
@@ -25,9 +28,12 @@ app.use(passport.initialize());
 require('./config/passport')(passport);
 
 // Warehouses
-app.use('/platillo', platillo);
-app.use('/ciudad', ciudad);
+app.use('/rol', rol);
 app.use('/user', user);
+app.use('/ciudad', ciudad);
+app.use('/telefono', telefono);
+app.use('/platillo', platillo);
+app.use('/restaurante', restaurante);
 
 // Set port
 app.listen(3000);
