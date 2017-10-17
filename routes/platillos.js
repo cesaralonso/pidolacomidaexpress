@@ -23,13 +23,18 @@ router
             return Platillo.response(res, error, data);
         });
     })
+    .delete('/:id', (req, res, next) => {
+        const platilloId = req.params.id;
+        Platillo.remove( platilloId, (error, data) => {
+            return Platillo.response(res, error, data);
+        });
+    })
     .patch('/', (req, res, next) => {
         const platillo = {
             idplatillo: req.body.idplatillo,
             nombre: req.body.nombre,
             descripcion: req.body.descripcion,
-            tipoComida_idtipoComida: req.body.tipoComida_idtipoComida,
-            baja: false
+            tipoComida_idtipoComida: req.body.tipoComida_idtipoComida
         };
         Platillo.update( platillo, (error, data) => {
             return Platillo.response(res, error, data);
@@ -40,8 +45,7 @@ router
             idplatillo: null,
             nombre: req.body.nombre,
             descripcion: req.body.descripcion,
-            tipoComida_idtipoComida: req.body.tipoComida_idtipoComida,
-            baja: false
+            tipoComida_idtipoComida: req.body.tipoComida_idtipoComida
         }
         console.log(platillo);
         Platillo.insert( platillo, (error, data) => {
