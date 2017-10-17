@@ -16,11 +16,15 @@ router
     })
 
     .post('/', (req, res, next) => {
-        const platillo = {
-            idplatillo: req.body.idplatillo,
+        console.log(req);
+        const platillo =
+        {
             nombre: req.body.nombre,
-            descripcion: req.body.descripcion
-        };
+            descripcion: req.body.descripcion,
+            tipoComida_idtipoComida: req.body.tipoComida_idtipoComida,
+            baja: false
+        }
+        console.log(platillo);
         Platillo.insert( platillo, (error, data) => {
             return Platillo.response(res, error, data);
         });

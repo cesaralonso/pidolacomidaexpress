@@ -5,7 +5,7 @@ const Platillo = {};
 Platillo.all = next => {
     if ( !connection )
         return next('Connection refused');
-    connection.query('SELECT * FROM platillo', (error, result) => {
+        connection.query('SELECT * FROM platillo', (error, result) => {
         if ( error )
             return next({ success: false, error: error });
         else
@@ -16,7 +16,7 @@ Platillo.all = next => {
 Platillo.findById = (platilloId, next) => {
     if ( !connection )
         return next('Connection refused');
-    connection.query('SELECT * FROM platillo WHERE idplatillo = ?', [platilloId], (error, result) => {
+        connection.query('SELECT * FROM platillo WHERE idplatillo = ?', [platilloId], (error, result) => {
         if ( error )
             return next({ success: false, error: error });
         else
@@ -27,7 +27,7 @@ Platillo.findById = (platilloId, next) => {
 Platillo.insert = (platillo, next) => {
     if ( !connection )
         return next('Connection refused');
-    connection.query(`INSERT INTO platillo SET ?`, [platillo], (error, result, fileds) => {
+        connection.query(`INSERT INTO platillo SET ?`, [platillo], (error, result, fileds) => {
         if ( error )
             return next({ success: false, error: error });
         else
