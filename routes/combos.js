@@ -34,7 +34,9 @@ router
             idcombo: req.body.idcombo,
             nombre: req.body.nombre,
             descripcion: req.body.descripcion,
-            tipoComida_idtipoComida: req.body.tipoComida_idtipoComida
+            precio: req.body.precio,
+            fecha_ini: req.body.fecha_ini,
+            fecha_fin: req.body.fecha_fin,
         };
         Combo.update( combo, (error, data) => {
             return Combo.response(res, error, data);
@@ -45,8 +47,10 @@ router
             idcombo: null,
             nombre: req.body.nombre,
             descripcion: req.body.descripcion,
-            tipoComida_idtipoComida: req.body.tipoComida_idtipoComida
-        }
+            precio: req.body.precio,
+            fecha_ini: req.body.fecha_ini,
+            fecha_fin: req.body.fecha_fin,
+        };
         console.log(combo);
         Combo.insert( combo, (error, data) => {
             return Combo.response(res, error, data);

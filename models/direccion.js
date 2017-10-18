@@ -1,11 +1,11 @@
 const connection = require('../config/db-connection');
 
-const Platillo = {};
+const Direccion = {};
 
-Platillo.all = next => {
+Direccion.all = next => {
     if ( !connection )
         return next('Connection refused');
-        connection.query('SELECT * FROM platillo', (error, result) => {
+        connection.query('SELECT * FROM direccion', (error, result) => {
         if ( error )
             return next({ success: false, error: error })
         else
@@ -13,11 +13,11 @@ Platillo.all = next => {
     });
 };
 
-Platillo.findById = (platilloId, next) => {
+Direccion.findById = (direccionId, next) => {
     if ( !connection )
         return next('Connection refused');
-        connection.query('SELECT * FROM platillo WHERE idplatillo = ?', 
-        [platilloId], (error, result) => {
+        connection.query('SELECT * FROM direccion WHERE iddireccion = ?', 
+        [direccionId], (error, result) => {
         if ( error )
             return next({ success: false, error: error })
         else
@@ -25,10 +25,10 @@ Platillo.findById = (platilloId, next) => {
     });
 };
 
-Platillo.count = next => {
+Direccion.count = next => {
     if ( !connection )
         return next('Connection refused');
-        connection.query(`SELECT COUNT(idplatillo) AS count FROM platillo`, (error, result) => {
+        connection.query(`SELECT COUNT(iddireccion) AS count FROM direccion`, (error, result) => {
         if ( error )
             return next({ success: false, error: error })
         else
@@ -36,10 +36,10 @@ Platillo.count = next => {
     });
 };
 
-Platillo.exist = (platilloId, next) => {
+Direccion.exist = (direccionId, next) => {
     if ( !connection )
         return next('Connection refused');
-        connection.query('SELECT EXISTS(SELECT 1 FROM platillo WHERE idplatillo = ?) AS exist', [platilloId], (error, result) => {
+        connection.query('SELECT EXISTS(SELECT 1 FROM direccion WHERE iddireccion = ?) AS exist', [direccionId], (error, result) => {
         if ( error )
             return next({ success: false, error: error })
         else
@@ -48,10 +48,10 @@ Platillo.exist = (platilloId, next) => {
     })
 };
 
-Platillo.insert = (platillo, next) => {
+Direccion.insert = (direccion, next) => {
     if ( !connection )
         return next('Connection refused');
-        connection.query(`INSERT INTO platillo SET ?`, [platillo], (error, result) => {
+        connection.query(`INSERT INTO direccion SET ?`, [direccion], (error, result) => {
         if ( error ) 
             return next({ success: false, error: error })
         else 
@@ -59,10 +59,10 @@ Platillo.insert = (platillo, next) => {
     });
 };
 
-Platillo.update = (platillo, next) => {
+Direccion.update = (direccion, next) => {
     if ( !connection )
         return next('Connection refused');
-        connection.query('UPDATE platillo SET ? WHERE idplatillo = ?', [platillo, platillo.idplatillo], (error, result) => {
+        connection.query('UPDATE direccion SET ? WHERE iddireccion = ?', [direccion, direccion.iddireccion], (error, result) => {
         if ( error )
             return next({ success: false, error: error });
         else
@@ -70,20 +70,20 @@ Platillo.update = (platillo, next) => {
     });
 };
 
-Platillo.remove = (platilloId, next) => {
+Direccion.remove = (direccionId, next) => {
     if( !connection )
         return next('Connection refused');
-    connection.query('DELETE FROM platillo WHERE idplatillo = ?', [platilloId], (error, result) => {
+    connection.query('DELETE FROM direccion WHERE iddireccion = ?', [direccionId], (error, result) => {
         if(error) return next({ success: false, error: error, message: 'An error has happened while deleting table' });
-        return next(null, { success: true, result: result, message: '¡Platillo eliminado!' });
+        return next(null, { success: true, result: result, message: '¡Direccion eliminado!' });
     });
 };
 
-Platillo.response = (res, error, data) => {
+Direccion.response = (res, error, data) => {
     if ( error )
         res.status(500).json(error);
     else 
         res.status(200).json(data);
 };
 
-module.exports = Platillo;
+module.exports = Direccion;

@@ -9,9 +9,12 @@ const passport = require('passport');
 const rol = require('./routes/roles');
 const user = require('./routes/users');
 const combo = require('./routes/combos');
+const estado = require('./routes/estados');
 const ciudad = require('./routes/ciudades');
 const telefono = require('./routes/telefonos');
 const platillo = require('./routes/platillos');
+const direccion = require('./routes/direcciones');
+const enfermedad = require('./routes/enfermedades');
 const restaurante = require('./routes/restaurantes');
 
 // Express Instance
@@ -32,9 +35,12 @@ require('./config/passport')(passport);
 app.use('/rol', rol);
 app.use('/user', user);
 app.use('/combo', combo);
+app.use('/estado', estado);
 app.use('/ciudad', ciudad);
 app.use('/telefono', telefono);
 app.use('/platillo', platillo);
+app.use('/direccion', direccion);
+app.use('/enfermedad', enfermedad);
 app.use('/restaurante', restaurante);
 
 // Set port
