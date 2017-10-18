@@ -136,13 +136,13 @@ User.update = (user, next) => {
     });
 };
 
-User.remove = (userId, cb) => {
-    if(conn) {
-        conn.query('DELETE FROM user WHERE iduser = ?', [userId], (error, result) => {
-            if(error) return cb('An error has happened while deleting table');
-            return cb(null, "¡User eliminado!");
-        });
-    }
+User.remove = (userId, next) => {
+    if( !connection )
+        return next('Connection refused');
+    connection.query('DELETE FROM user WHERE iduser = ?', [userId], (error, result) => {
+        if(error) return next({ success: false, error: error, message: 'An error has happened while deleting table' });
+        return next(null, { success: true, result: result, message: '¡Usuario eliminado!' });
+    });
 };
 
 User.response = (res, error, data) => {

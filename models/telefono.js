@@ -71,10 +71,10 @@ Telefono.update = (telefono, next) => {
 };
 
 Telefono.remove = (telefonoId, cb) => {
-    if(conn) {
-        conn.query('DELETE FROM telefono WHERE idtelefono = ?', [telefonoId], (error, result) => {
-            if(error) return cb('An error has happened while deleting table');
-            return cb(null, "¡Telefono eliminado!");
+    if( connection ) {
+        connection.query('DELETE FROM telefono WHERE idtelefono = ?', [telefonoId], (error, result) => {
+            if(error) return next({ success: false, error: error, message: 'An error has happened while deleting table' });
+            return next(null, { success: true, result: result, message: 'Teléfono eliminado!' });
         });
     }
 };

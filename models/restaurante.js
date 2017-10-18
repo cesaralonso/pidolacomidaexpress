@@ -71,10 +71,10 @@ Restaurante.update = (restaurante, next) => {
 };
 
 Restaurante.remove = (restauranteId, cb) => {
-    if(conn) {
-        conn.query('DELETE FROM restaurante WHERE idrestaurante = ?', [restauranteId], (error, result) => {
-            if(error) return cb('An error has happened while deleting table');
-            return cb(null, "¡Restaurante eliminado!");
+    if( connection ) {
+        connection.query('DELETE FROM restaurante WHERE idrestaurante = ?', [restauranteId], (error, result) => {
+            if(error) return next({ success: false, error: error, message: 'An error has happened while deleting table' });
+            return next(null, { success: true, result: result, message: 'Restaurante eliminado!' });
         });
     }
 };
