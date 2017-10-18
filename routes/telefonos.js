@@ -32,7 +32,6 @@ router
     .patch('/', (req, res, next) => {
         const telefono = {
             idtelefono: req.body.email,
-            created_by: req.body.email,
             numero: req.body.email,
             lada: req.body.email,
             compania: req.body.email,
@@ -44,7 +43,6 @@ router
     .post('/', (req, res, next) => {
         const telefono = {
             idtelefono: null,
-            created_by: req.body.email,
             numero: req.body.email,
             lada: req.body.email,
             compania: req.body.email,
