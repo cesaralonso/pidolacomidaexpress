@@ -32,20 +32,21 @@ router
     .patch('/', (req, res, next) => {
         const telefono = {
             idtelefono: req.body.email,
-            numero: req.body.email,
-            lada: req.body.email,
-            compania: req.body.email,
+            numero: req.body.numero,
+            lada: req.body.lada,
+            compania: req.body.compania,
         };
         Telefono.update( telefono, (error, data) => {
             return Telefono.response(res, error, data);
         })
     })
     .post('/', (req, res, next) => {
+        console.log(req.body);
         const telefono = {
             idtelefono: null,
-            numero: req.body.email,
-            lada: req.body.email,
-            compania: req.body.email,
+            numero: req.body.numero,
+            lada: req.body.lada,
+            compania: req.body.compania,
         }
         console.log(telefono);
         Telefono.insert( telefono, (error, data) => {
