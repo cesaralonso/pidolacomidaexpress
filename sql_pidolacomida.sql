@@ -82,7 +82,8 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`direccion` (
   `principal` TINYINT(1) NULL,
   `baja` TINYINT(1) NULL,
   `created_by` INT NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`iddireccion`),
   INDEX `fk_direccion_ciudad1_idx` (`ciudad_idciudad` ASC),
   INDEX `calle` (`calle` ASC),
@@ -102,12 +103,11 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pidolacomida`.`telefono` (
   `idtelefono` INT NOT NULL AUTO_INCREMENT,
-  `created_by` INT NULL,
   `numero` VARCHAR(15) NOT NULL,
   `lada` VARCHAR(5) NOT NULL,
   `compania` VARCHAR(15) NULL,
   `baja` TINYINT(1) NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`idtelefono`),
   INDEX `numero` (`numero` ASC))
 ENGINE = InnoDB;
@@ -124,22 +124,40 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `pidolacomida`.`image`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pidolacomida`.`image` (
+  `idimage` INT NOT NULL AUTO_INCREMENT,
+  `src` VARCHAR(145) NOT NULL,
+  `title` VARCHAR(45) NULL,
+  `description` VARCHAR(45) NULL,
+  `baja` TINYINT(1) NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` INT NULL,
+  PRIMARY KEY (`idimage`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `pidolacomida`.`user`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pidolacomida`.`user` (
   `iduser` INT NOT NULL AUTO_INCREMENT,
   `nombres` VARCHAR(45) NOT NULL,
   `apellidos` VARCHAR(45) NOT NULL,
-  `email` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(45) CHARACTER SET 'big5' NOT NULL,
+  `password` BINARY(60) NOT NULL,
   `telefono_idtelefono` INT NOT NULL,
   `rol_idrol` VARCHAR(45) NOT NULL,
+  `image_idimage` INT NOT NULL,
   `baja` TINYINT(1) NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT NULL,
   PRIMARY KEY (`iduser`, `rol_idrol`),
   INDEX `fk_user_telefono1_idx` (`telefono_idtelefono` ASC),
   INDEX `fk_user_rol1_idx` (`rol_idrol` ASC),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC),
+  INDEX `fk_user_image1_idx` (`image_idimage` ASC),
   CONSTRAINT `fk_user_telefono1`
     FOREIGN KEY (`telefono_idtelefono`)
     REFERENCES `pidolacomida`.`telefono` (`idtelefono`)
@@ -148,6 +166,11 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`user` (
   CONSTRAINT `fk_user_rol1`
     FOREIGN KEY (`rol_idrol`)
     REFERENCES `pidolacomida`.`rol` (`idrol`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_image1`
+    FOREIGN KEY (`image_idimage`)
+    REFERENCES `pidolacomida`.`image` (`idimage`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -167,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`restaurante` (
   `restaurante_idrestaurante` INT NOT NULL,
   `baja` TINYINT(1) NULL,
   `created_by` INT NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`idrestaurante`),
   INDEX `fk_restaurante_direccion1_idx` (`direccion_iddireccion` ASC),
   INDEX `fk_restaurante_user1_idx` (`user_iduser` ASC),
@@ -201,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`email` (
   `tipo` VARCHAR(25) CHARACTER SET 'big5' NULL,
   `descripcion` VARCHAR(45) NULL,
   `baja` TINYINT(1) NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT NULL,
   PRIMARY KEY (`idemail`))
 ENGINE = InnoDB;
@@ -282,7 +305,7 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`tipoComida` (
   `descripcion` VARCHAR(145) NULL,
   `region` VARCHAR(45) NOT NULL,
   `baja` TINYINT(1) NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT NULL,
   PRIMARY KEY (`idtipoComida`),
   INDEX `nombre` (`nombre` ASC),
@@ -300,7 +323,7 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`platillo` (
   `tipoComida_idtipoComida` INT NOT NULL,
   `baja` TINYINT(1) NULL,
   `created_by` INT NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`idplatillo`, `tipoComida_idtipoComida`),
   INDEX `nombre` (`nombre` ASC),
   INDEX `descripcion` (`descripcion` ASC),
@@ -323,7 +346,8 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`restaurante_has_platillo` (
   `descripcion` VARCHAR(45) NULL,
   `tiempopreparacion` TIME NULL,
   `baja` TINYINT(1) NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` INT NULL,
   PRIMARY KEY (`restaurante_idrestaurante`, `platillo_idplatillo`),
   INDEX `fk_restaurante_has_platillo_platillo1_idx` (`platillo_idplatillo` ASC),
   INDEX `fk_restaurante_has_platillo_restaurante1_idx` (`restaurante_idrestaurante` ASC),
@@ -350,9 +374,11 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`ingrediente` (
   `calorias` FLOAT NULL,
   `carbohidratos` FLOAT NULL,
   `grasas` FLOAT NULL,
+  `ensalada` TINYINT(1) NULL,
+  `carne` TINYINT(1) NULL,
   `baja` TINYINT(1) NULL,
   `created_by` INT NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`idingrediente`),
   INDEX `calorias` (`calorias` ASC),
   INDEX `proteinas` (`proteinas` ASC),
@@ -397,7 +423,7 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`combo` (
   `fecha_ini` DATETIME NULL,
   `fecha_fin` DATETIME NULL,
   `baja` TINYINT(1) NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT NULL,
   PRIMARY KEY (`idcombo`),
   INDEX `nombre` (`nombre` ASC),
@@ -479,7 +505,7 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`oferta` (
   `res_has_pla_restaurante_idrestaurante` INT NOT NULL,
   `res_has_pla_platillo_idplatillo` INT NOT NULL,
   `baja` TINYINT(1) NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT NULL,
   PRIMARY KEY (`idoferta`),
   INDEX `fk_oferta_restaurante_has_platillo1_idx` (`res_has_pla_restaurante_idrestaurante` ASC, `res_has_pla_platillo_idplatillo` ASC),
@@ -511,10 +537,11 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`horario` (
   `hora_fin` TIME NOT NULL,
   `semana_idsemana` VARCHAR(10) NOT NULL,
   `baja` TINYINT(1) NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT NULL,
   PRIMARY KEY (`idhorario`, `semana_idsemana`),
   INDEX `fk_horario_semana1_idx` (`semana_idsemana` ASC),
+  UNIQUE INDEX `index_unique1` (`hora_ini` ASC, `hora_fin` ASC, `semana_idsemana` ASC),
   CONSTRAINT `fk_horario_semana1`
     FOREIGN KEY (`semana_idsemana`)
     REFERENCES `pidolacomida`.`semana` (`idsemana`)
@@ -579,8 +606,9 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`orden` (
   `horaSolicitado` DATETIME NOT NULL,
   `direccion_iddireccion` INT NOT NULL,
   `status` VARCHAR(25) NOT NULL,
+  `status_description` VARCHAR(155) NULL,
   `baja` TINYINT(1) NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT NULL,
   PRIMARY KEY (`idorden`),
   INDEX `fk_orden_user1_idx` (`user_iduser` ASC),
@@ -612,7 +640,7 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`pago` (
   `facturar` TINYINT(1) NOT NULL,
   `baja` TINYINT(1) NULL,
   `created_by` INT NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`idpago`),
   INDEX `fk_pago_orden1_idx` (`orden_idorden` ASC),
   CONSTRAINT `fk_pago_orden1`
@@ -636,8 +664,9 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`platilloOrdenado` (
   `horaPreparacion` DATETIME NOT NULL,
   `horaSolicitado` DATETIME NOT NULL,
   `status` VARCHAR(25) NOT NULL,
+  `status_description` VARCHAR(145) NULL,
   `baja` TINYINT(1) NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT NULL,
   PRIMARY KEY (`idplatilloOrdenado`),
   INDEX `fk_platilloOrdenado_user1_idx` (`user_iduser` ASC),
@@ -715,8 +744,10 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`factura` (
   `direccion_iddireccion` INT NOT NULL,
   `pago_idpago` INT NOT NULL,
   `baja` TINYINT(1) NULL,
-  `created_at` TIMESTAMP NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT NULL,
+  `srcPDF` VARCHAR(225) NULL,
+  `srcXML` VARCHAR(225) NULL,
   PRIMARY KEY (`idfactura`),
   INDEX `fk_factura_direccion1_idx` (`direccion_iddireccion` ASC),
   INDEX `fk_factura_pago1_idx` (`pago_idpago` ASC),
@@ -729,6 +760,137 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`factura` (
   CONSTRAINT `fk_factura_pago1`
     FOREIGN KEY (`pago_idpago`)
     REFERENCES `pidolacomida`.`pago` (`idpago`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `pidolacomida`.`restaurante_has_image`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pidolacomida`.`restaurante_has_image` (
+  `restaurante_idrestaurante` INT NOT NULL,
+  `image_idimage` INT NOT NULL,
+  PRIMARY KEY (`restaurante_idrestaurante`, `image_idimage`),
+  INDEX `fk_restaurante_has_image_image1_idx` (`image_idimage` ASC),
+  INDEX `fk_restaurante_has_image_restaurante1_idx` (`restaurante_idrestaurante` ASC),
+  CONSTRAINT `fk_restaurante_has_image_restaurante1`
+    FOREIGN KEY (`restaurante_idrestaurante`)
+    REFERENCES `pidolacomida`.`restaurante` (`idrestaurante`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_restaurante_has_image_image1`
+    FOREIGN KEY (`image_idimage`)
+    REFERENCES `pidolacomida`.`image` (`idimage`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `pidolacomida`.`restaurante_has_platillo_has_image`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pidolacomida`.`restaurante_has_platillo_has_image` (
+  `restaurante_has_platillo_restaurante_idrestaurante` INT NOT NULL,
+  `restaurante_has_platillo_platillo_idplatillo` INT NOT NULL,
+  `image_idimage` INT NOT NULL,
+  PRIMARY KEY (`restaurante_has_platillo_restaurante_idrestaurante`, `restaurante_has_platillo_platillo_idplatillo`, `image_idimage`),
+  INDEX `fk_restaurante_has_platillo_has_image_image1_idx` (`image_idimage` ASC),
+  INDEX `fk_restaurante_has_platillo_has_image_restaurante_has_plati_idx` (`restaurante_has_platillo_restaurante_idrestaurante` ASC, `restaurante_has_platillo_platillo_idplatillo` ASC),
+  CONSTRAINT `fk_restaurante_has_platillo_has_image_restaurante_has_platillo1`
+    FOREIGN KEY (`restaurante_has_platillo_restaurante_idrestaurante` , `restaurante_has_platillo_platillo_idplatillo`)
+    REFERENCES `pidolacomida`.`restaurante_has_platillo` (`restaurante_idrestaurante` , `platillo_idplatillo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_restaurante_has_platillo_has_image_image1`
+    FOREIGN KEY (`image_idimage`)
+    REFERENCES `pidolacomida`.`image` (`idimage`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `pidolacomida`.`oferta_has_image`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pidolacomida`.`oferta_has_image` (
+  `oferta_idoferta` INT NOT NULL,
+  `image_idimage` INT NOT NULL,
+  PRIMARY KEY (`oferta_idoferta`, `image_idimage`),
+  INDEX `fk_oferta_has_image_image1_idx` (`image_idimage` ASC),
+  INDEX `fk_oferta_has_image_oferta1_idx` (`oferta_idoferta` ASC),
+  CONSTRAINT `fk_oferta_has_image_oferta1`
+    FOREIGN KEY (`oferta_idoferta`)
+    REFERENCES `pidolacomida`.`oferta` (`idoferta`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_oferta_has_image_image1`
+    FOREIGN KEY (`image_idimage`)
+    REFERENCES `pidolacomida`.`image` (`idimage`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `pidolacomida`.`tarjeta`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pidolacomida`.`tarjeta` (
+  `idtarjeta` INT NOT NULL,
+  `numero` BINARY(60) NOT NULL,
+  `clave` BINARY(60) NOT NULL,
+  `nombre` BINARY(60) NULL,
+  `banco` VARCHAR(15) NOT NULL,
+  `principal` TINYINT(1) NULL,
+  `activa` TINYINT(1) NULL,
+  `baja` TINYINT(1) NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` INT NULL,
+  PRIMARY KEY (`idtarjeta`),
+  UNIQUE INDEX `numero_UNIQUE` (`numero` ASC))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `pidolacomida`.`user_has_tarjeta`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pidolacomida`.`user_has_tarjeta` (
+  `user_iduser` INT NOT NULL,
+  `user_rol_idrol` VARCHAR(45) NOT NULL,
+  `tarjeta_idtarjeta` INT NOT NULL,
+  PRIMARY KEY (`user_iduser`, `user_rol_idrol`, `tarjeta_idtarjeta`),
+  INDEX `fk_user_has_tarjeta_tarjeta1_idx` (`tarjeta_idtarjeta` ASC),
+  INDEX `fk_user_has_tarjeta_user1_idx` (`user_iduser` ASC, `user_rol_idrol` ASC),
+  CONSTRAINT `fk_user_has_tarjeta_user1`
+    FOREIGN KEY (`user_iduser` , `user_rol_idrol`)
+    REFERENCES `pidolacomida`.`user` (`iduser` , `rol_idrol`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_has_tarjeta_tarjeta1`
+    FOREIGN KEY (`tarjeta_idtarjeta`)
+    REFERENCES `pidolacomida`.`tarjeta` (`idtarjeta`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `pidolacomida`.`restaurante_has_tarjeta`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pidolacomida`.`restaurante_has_tarjeta` (
+  `restaurante_idrestaurante` INT NOT NULL,
+  `tarjeta_idtarjeta` INT NOT NULL,
+  PRIMARY KEY (`restaurante_idrestaurante`, `tarjeta_idtarjeta`),
+  INDEX `fk_restaurante_has_tarjeta_tarjeta1_idx` (`tarjeta_idtarjeta` ASC),
+  INDEX `fk_restaurante_has_tarjeta_restaurante1_idx` (`restaurante_idrestaurante` ASC),
+  CONSTRAINT `fk_restaurante_has_tarjeta_restaurante1`
+    FOREIGN KEY (`restaurante_idrestaurante`)
+    REFERENCES `pidolacomida`.`restaurante` (`idrestaurante`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_restaurante_has_tarjeta_tarjeta1`
+    FOREIGN KEY (`tarjeta_idtarjeta`)
+    REFERENCES `pidolacomida`.`tarjeta` (`idtarjeta`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
