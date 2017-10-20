@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const passport = require('passport');
 const RestaurantePlatillo = require('../models/restaurantePlatillo');
 
 router
@@ -49,17 +50,20 @@ router
         })
     })
     .post('/', (req, res, next) => {
-        const restaurantePlatillo = {
-            restaurante_idrestaurante: req.body.restaurante_idrestaurante,
-            platillo_idplatillo: req.body.platillo_idplatillo,
-            precio: req.body.precio,
-            descripcion: req.body.descripcion,
-            tiempopreparacion: req.body.tiempopreparacion
-        };
-        console.log(restaurantePlatillo);
-        RestaurantePlatillo.insert( restaurantePlatillo, (error, data) => {
-            return RestaurantePlatillo.response(res, error, data);
-        });
+        passport.authenticate('jwt', { session: false }, (err, user, info) => {
+            const restaurantePlatillo = {
+                restaurante_idrestaurante: req.body.restaurante_idrestaurante,
+                platillo_idplatillo: req.body.platillo_idplatillo,
+                precio: req.body.precio,
+                descripcion: req.body.descripcion,
+                tiempopreparacion: req.body.tiempopreparacion,
+                created_by: user.iduser
+            };
+            console.log(restaurantePlatillo);
+            RestaurantePlatillo.insert( restaurantePlatillo, (error, data) => {
+                return RestaurantePlatillo.response(res, error, data);
+            });
+        })(req, res, next);
     })
 
 module.exports = router;
