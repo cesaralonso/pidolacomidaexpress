@@ -11,6 +11,7 @@ router
             password: req.body.password,
             telefono_idtelefono: req.body.telefono_idtelefono,
             rol_idrol: req.body.rol_idrol,
+            image_idimage: 1 // Image by default
         }
         User.register( user, (error, data) =>{
             User.response(res, error, data);

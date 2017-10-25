@@ -16,6 +16,7 @@ User.register = (user, next) => {
         user.password = hash;
         // Insert into table
         connection.query('INSERT INTO user SET ?', [user], ( error, result ) => {
+            console.log(error);
             if ( error ) {
                 // WARNING: To take effect, user table must have the email field as unique column
                 if (error.code === 'ER_DUP_ENTRY') {
