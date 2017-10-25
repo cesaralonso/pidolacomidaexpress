@@ -63,7 +63,8 @@ User.login = ( email, password, next ) => {
                     return next( null, { 
                         success: true,
                         message: 'Has iniciado sessión correctamente',
-                        token: 'JWT ' + token 
+                        iduser: result[0].iduser,
+                        token: 'JWT ' + token
                     });
                 } else 
                     return next(null, {

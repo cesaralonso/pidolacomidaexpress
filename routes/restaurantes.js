@@ -18,6 +18,13 @@ router
             return Restaurante.response(res, error, data);
         });
     })
+    .get('/getByParam/:column/:param', (req, res, next) => {
+        const column = req.params.column;
+        const param = req.params.param;
+        Restaurante.findByParam( column, param, (error, data) => {
+            return Restaurante.response(res, error, data);
+        });
+    })
     .get('/:id', (req, res, next) => {
         const restauranteId = req.params.id;
         Restaurante.findById( restauranteId, (error, data) => {
@@ -34,7 +41,7 @@ router
         const restaurante = {
             idrestaurante: req.body.idrestaurante,
             descripcion: req.body.descripcion,
-            user_iduser: user.iduser,
+            direccion_iddireccion: req.body.direccion_iddireccion,
             razon: req.body.razon,
             nombre: req.body.nombre,
         }

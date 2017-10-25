@@ -1,4 +1,5 @@
 const connection = require('../config/db-connection');
+const async = require('async');
 
 const Restaurante = {};
 
@@ -20,8 +21,17 @@ Restaurante.findById = (restauranteId, next) => {
         [restauranteId], (error, result) => {
         if ( error )
             return next({ success: false, error: error })
-        else
-            return next( null, { success: true, result: result[0] });
+        else {
+            connection.query(`SELECT * FROM direccion WHERE iddireccion = ?`, [result[0].direccion_iddireccion], (error, resultD) => {
+                if ( error ) return next({ success: false, error: error })
+                else {
+                    console.log('ResultD: ', resultD[0]);
+                    result[0].direccion = resultD[0];
+                    console.log(result);
+                    return next( null, { success: true, result: result });
+                }
+            })
+        }
     });
 };
 
@@ -60,6 +70,26 @@ Restaurante.insert = (restaurante, next) => {
             return next( null, { success: true, result: result });
     });
 };
+
+Restaurante.findByParam = (column, param, next) => {
+    if ( connection ) {
+        connection.query(`SELECT * FROM restaurante WHERE ?? = ?`, [column, param], (error, result) => {
+        if ( error ) 
+            return next({ success: false, error: error })
+        else {
+            connection.query(`SELECT * FROM direccion WHERE iddireccion = ?`, [result[0].direccion_iddireccion], (error, resultD) => {
+                if ( error ) return next({ success: false, error: error })
+                else {
+                    result.direccion = resultD;
+                    console.log(result);
+                    return next( null, { success: true, result: result });
+                }
+            })
+            // return next( null, { success: true, result: result });
+        }
+        })
+    }
+}
 
 Restaurante.update = (restaurante, next) => {
     if ( !connection )
