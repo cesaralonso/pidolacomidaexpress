@@ -57,7 +57,7 @@ User.login = ( email, password, next ) => {
                     }
                     // Generate token
                     const token = jwt.sign(user, mySecretPass, {
-                        expiresIn: 6000
+                        expiresIn: 60 * 60 * 24
                     });
                     return next( null, { 
                         success: true,

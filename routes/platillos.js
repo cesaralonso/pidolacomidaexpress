@@ -1,6 +1,6 @@
 const router = require('express').Router();
+const passport = require('passport');
 const Platillo = require('../models/platillo');
-
 router
     .get('/', (req, res, next) => {
         Platillo.all( (error, data) => {
@@ -40,17 +40,21 @@ router
             return Platillo.response(res, error, data);
         })
     })
-    .post('/', (req, res, next) => {
-        const platillo = {
-            idplatillo: null,
-            nombre: req.body.nombre,
-            descripcion: req.body.descripcion,
-            tipoComida_idtipoComida: req.body.tipoComida_idtipoComida
-        }
-        console.log(platillo);
-        Platillo.insert( platillo, (error, data) => {
-            return Platillo.response(res, error, data);
-        });
+    .post('/', (req, res, next) => { // http://passportjs.org/docs -> Custom Callback
+        passport.authenticate('jwt', { session: false }, (err, user, info) => {
+            console.log(err);
+            const platillo = {
+                idplatillo: null,
+                nombre: req.body.nombre,
+                descripcion: req.body.descripcion,
+                tipoComida_idtipoComida: req.body.tipoComida_idtipoComida,
+                created_by: user.iduser
+            }
+            console.log(platillo);
+            Platillo.insert( platillo, (error, data) => {
+                return Platillo.response(res, error, data);
+            });
+        })(req, res, next);
     })
 
 module.exports = router;

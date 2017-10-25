@@ -46,21 +46,24 @@ router
         })
     })
     .post('/', (req, res, next) => {
-        const platilloOrdenado = {
-            idplatilloOrdenado: null,
-            user_iduser: req.body.user_iduser,
-            res_has_pla_restaurante_idrestaurante: req.body.res_has_pla_restaurante_idrestaurante,
-            res_has_pla_platillo_idplatillo: req.body.res_has_pla_platillo_idplatillo,
-            horaSale: req.body.horaSale,
-            horaEntregado: req.body.horaEntregado,
-            horaPreparacion: req.body.horaPreparacion,
-            horaSolicitado: req.body.horaSolicitado,
-            status: req.body.status
-        };
-        console.log(platilloOrdenado);
-        PlatilloOrdenado.insert( platilloOrdenado, (error, data) => {
-            return PlatilloOrdenado.response(res, error, data);
-        });
+        passport.authenticate('jwt', { session: false }, (err, user, info) => {
+            const platilloOrdenado = {
+                idplatilloOrdenado: null,
+                user_iduser: req.body.user_iduser,
+                res_has_pla_restaurante_idrestaurante: req.body.res_has_pla_restaurante_idrestaurante,
+                res_has_pla_platillo_idplatillo: req.body.res_has_pla_platillo_idplatillo,
+                horaSale: req.body.horaSale,
+                horaEntregado: req.body.horaEntregado,
+                horaPreparacion: req.body.horaPreparacion,
+                horaSolicitado: req.body.horaSolicitado,
+                status: req.body.status,
+                created_by: user.userid
+            };
+            console.log('Platillo Ordenado: ', platilloOrdenado);
+            PlatilloOrdenado.insert( platilloOrdenado, (error, data) => {
+                return PlatilloOrdenado.response(res, error, data);
+            });
+        })(req, res, next);
     })
 
 module.exports = router;
