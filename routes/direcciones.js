@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const passport = require('passport');
 const Direccion = require('../models/direccion');
 
 router
@@ -48,23 +49,28 @@ router
         })
     })
     .post('/', (req, res, next) => {
-        const direccion = {
-            iddireccion: null,
-            calle: req.body.calle,
-            entrecalle1: req.body.entrecalle1,
-            lat: req.body.lat,
-            lng: req.body.lng,
-            numext: req.body.numext,
-            numint: req.body.numint,
-            colonia: req.body.colonia,
-            cp: req.body.cp,
-            ciudad_idciudad: req.body.ciudad_idciudad,
-            principal: req.body.principal,
-        };
-        console.log(direccion);
-        Direccion.insert( direccion, (error, data) => {
-            return Direccion.response(res, error, data);
-        });
+        passport.authenticate('jwt', { session: false }, (err, user, info) => {
+            
+            const direccion = {
+                iddireccion: null,
+                calle: req.body.calle,
+                entrecalle1: req.body.entrecalle1,
+                entrecalle2: req.body.entrecalle2,
+                lat: req.body.lat,
+                lng: req.body.lng,
+                numext: req.body.numext,
+                numint: req.body.numint,
+                colonia: req.body.colonia,
+                cp: req.body.cp,
+                ciudad_idciudad: req.body.ciudad_idciudad,
+                principal: req.body.principal,
+                created_by: user.iduser
+            };
+            console.log(direccion);
+            Direccion.insert( direccion, (error, data) => {
+                return Direccion.response(res, error, data);
+            });
+        })(req, res, next);
     })
 
 module.exports = router;

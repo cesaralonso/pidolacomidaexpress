@@ -52,8 +52,10 @@ Restaurante.insert = (restaurante, next) => {
     if ( !connection )
         return next('Connection refused');
         connection.query(`INSERT INTO restaurante SET ?`, [restaurante], (error, result) => {
-        if ( error ) 
+        if ( error ) {
+            console.log(error);
             return next({ success: false, error: error })
+        }
         else 
             return next( null, { success: true, result: result });
     });
