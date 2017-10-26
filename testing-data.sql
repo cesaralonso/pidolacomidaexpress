@@ -35,11 +35,30 @@ INSERT INTO image(idimage, src, title, description)
 VALUES (1,'imagen-default.jpg', 'Imagen Defualt', 'Imagen por default');
 
 -- -----------------------------------------------------
--- Add register into rol table
+-- Add registers into rol table
 -- -----------------------------------------------------
 INSERT INTO rol(idrol, descripcion)
 VALUES (1,'CLIENTE');
 INSERT INTO rol(idrol, descripcion)
 VALUES (2,'EMPRESA');
 
+-- -----------------------------------------------------
+-- Add registers into tipoComida table
+-- -----------------------------------------------------
+INSERT INTO tipoComida(idtipoComida, nombre, descripcion, region)
+VALUES (1,'Mexicana', 'Comida tradicional mexicana', 'México');
+INSERT INTO tipoComida(idtipoComida, nombre, descripcion, region)
+VALUES (2,'Italiana', 'Comida tradicional italiana', 'Italia');
+INSERT INTO tipoComida(idtipoComida, nombre, descripcion, region)
+VALUES (3,'China', 'Comida tradicional china', 'China');
 
+-- -----------------------------------------------------
+-- Add registers into semana table
+-- -----------------------------------------------------
+INSERT INTO semana(idsemana) VALUES('LUNES');
+INSERT INTO semana(idsemana) VALUES('MARTES');
+INSERT INTO semana(idsemana) VALUES('MIÉRCOLES');
+INSERT INTO semana(idsemana) VALUES('JUEVES');
+INSERT INTO semana(idsemana) VALUES('VIERNES');
+INSERT INTO semana(idsemana) VALUES('SÁBADO');
+INSERT INTO semana(idsemana) VALUES('DOMINGO');
