@@ -68,7 +68,7 @@ ENGINE = InnoDB;
 -- Table `pidolacomida`.`direccion`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pidolacomida`.`direccion` (
-  `iddireccion` INT NOT NULL,
+  `iddireccion` INT NOT NULL AUTO_INCREMENT,
   `calle` VARCHAR(45) NOT NULL,
   `entrecalle1` VARCHAR(45) NULL,
   `entrecalle2` VARCHAR(45) NULL,
@@ -183,7 +183,6 @@ CREATE TABLE IF NOT EXISTS `pidolacomida`.`restaurante` (
   `idrestaurante` INT NOT NULL AUTO_INCREMENT,
   `descripcion` VARCHAR(45) NOT NULL,
   `direccion_iddireccion` INT NOT NULL,
-  `restaurante_matriz_idrestaurante_matriz` INT NOT NULL,
   `user_iduser` INT NOT NULL,
   `razon` VARCHAR(45) NOT NULL,
   `nombre` VARCHAR(45) NOT NULL,
