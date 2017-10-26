@@ -1,7 +1,8 @@
 const connection = require('../config/db-connection');
 const async = require('async');
+const DynamicQuery = require('../services/dynamic-queries');
 
-const Restaurante = {};
+const Restaurante = { };
 
 Restaurante.all = next => {
     if ( !connection )
@@ -17,22 +18,32 @@ Restaurante.all = next => {
 Restaurante.findById = (restauranteId, next) => {
     if ( !connection )
         return next('Connection refused');
-        connection.query('SELECT * FROM restaurante WHERE idrestaurante = ?', 
-        [restauranteId], (error, result) => {
-        if ( error )
-            return next({ success: false, error: error })
-        else {
-            connection.query(`SELECT * FROM direccion WHERE iddireccion = ?`, [result[0].direccion_iddireccion], (error, resultD) => {
-                if ( error ) return next({ success: false, error: error })
-                else {
-                    console.log('ResultD: ', resultD[0]);
-                    result[0].direccion = resultD[0];
-                    console.log(result);
-                    return next( null, { success: true, result: result });
-                }
-            })
-        }
-    });
+        async.waterfall([
+            next => {
+                connection.query(`SELECT * FROM restaurante WHERE idrestaurante = ?`,
+                [restauranteId], (error, restaurantResult) => {
+                    if ( error )
+                        return next(error);
+                    else 
+                        return next(null, restaurantResult);
+                })
+            },
+            (restaurantResult, next) => {
+                connection.query(`SELECT * FROM direccion WHERE iddireccion = ?`, [restaurantResult[0].direccion_iddireccion], (error, resultDireccion) => {
+                    if ( error ) return next(error)
+                    else {
+                        restaurantResult[0].direccion = resultDireccion[0];
+                        return next( null, restaurantResult );
+                    } 
+                })
+            }
+        ],
+        (error, result) =>{
+            if ( error )
+                return next({ success: false, error: error })
+            else
+                return next( null, { success: true, result: result[0] });
+        })
 };
 
 Restaurante.count = next => {
@@ -72,23 +83,54 @@ Restaurante.insert = (restaurante, next) => {
 };
 
 Restaurante.findByParam = (column, param, next) => {
-    if ( connection ) {
-        connection.query(`SELECT * FROM restaurante WHERE ?? = ?`, [column, param], (error, result) => {
-        if ( error ) 
-            return next({ success: false, error: error })
-        else {
-            connection.query(`SELECT * FROM direccion WHERE iddireccion = ?`, [result[0].direccion_iddireccion], (error, resultD) => {
-                if ( error ) return next({ success: false, error: error })
-                else {
-                    result.direccion = resultD;
-                    console.log(result);
-                    return next( null, { success: true, result: result });
-                }
-            })
-            // return next( null, { success: true, result: result });
-        }
+        if (!connection)
+            return next('Connection refused');
+
+        async.waterfall([
+            next => {
+                connection.query(`SELECT * FROM restaurante WHERE ?? = ?`, [column, param], (error, restaurantResult) => {
+                    if ( error )
+                        return next(error)
+                    else 
+                        return next(null, restaurantResult);
+                });
+            },
+            (restaurantResult, next) => {
+                connection.query(`SELECT * FROM direccion WHERE iddireccion = ?`, [restaurantResult[0].direccion_iddireccion], (error, resultDireccion) => {
+                    if ( error ) return next(error);
+                    else {
+                        restaurantResult[0].direccion = resultDireccion[0];
+                        return next(null, restaurantResult);
+                    }
+                })
+            }
+        ],
+        (error, result) => {
+            if ( error )
+                return next({ success: false, error: error })
+            else
+                return next({ success: true, result: result })
         })
-    }
+
+    // if ( connection ) {
+
+
+    //     connection.query(`SELECT * FROM restaurante WHERE ?? = ?`, [column, param], (error, result) => {
+    //     if ( error ) 
+    //         return next({ success: false, error: error })
+    //     else {
+    //         connection.query(`SELECT * FROM direccion WHERE iddireccion = ?`, [result[0].direccion_iddireccion], (error, resultD) => {
+    //             if ( error ) return next({ success: false, error: error })
+    //             else {
+    //                 result.direccion = resultD;
+    //                 console.log(result);
+    //                 return next( null, { success: true, result: result });
+    //             }
+    //         })
+    //         // return next( null, { success: true, result: result });
+    //     }
+    //     })
+    // }
 }
 
 Restaurante.update = (restaurante, next) => {

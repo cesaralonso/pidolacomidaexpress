@@ -43,6 +43,3 @@ INSERT INTO rol(idrol, descripcion)
 VALUES (2,'EMPRESA');
 
 
-
-
-
