@@ -25,6 +25,7 @@ const ingrediente = require('./routes/ingredientes');
 const restaurante = require('./routes/restaurantes');
 const platilloOrdenado = require('./routes/platillosOrdenados');
 const restaurantePlatillo = require('./routes/restaurantesPlatillos');
+const restaurantePlatilloHorario = require('./routes/restaurantesPlatillosHorarios');
 
 // Express Instance
 const app = express();
@@ -60,9 +61,7 @@ app.use('/ingrediente', ingrediente);
 app.use('/restaurante', restaurante);
 app.use('/platilloOrdenado', platilloOrdenado);
 app.use('/restaurantePlatillo', restaurantePlatillo);
+app.use('/restaurantePlatilloHorario', restaurantePlatilloHorario);
 
 // Set port
 app.listen(3000);
-
-
-
