@@ -16,6 +16,7 @@ User.register = (user, next) => {
         user.password = hash;
         // Insert into table
         connection.query('INSERT INTO user SET ?', [user], ( error, result ) => {
+            console.log(error);
             if ( error ) {
                 // WARNING: To take effect, user table must have the email field as unique column
                 if (error.code === 'ER_DUP_ENTRY') {
@@ -62,7 +63,8 @@ User.login = ( email, password, next ) => {
                     return next( null, { 
                         success: true,
                         message: 'Has iniciado sessión correctamente',
-                        token: 'JWT ' + token 
+                        iduser: result[0].iduser,
+                        token: 'JWT ' + token
                     });
                 } else 
                     return next(null, {
