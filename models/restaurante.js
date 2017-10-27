@@ -30,7 +30,7 @@ Restaurante.findById = (restauranteId, next) => {
             },
             (restaurantResult, next) => {
                 // Add direccion relation to each restaurante                
-                DynamicQueries.addRelation(restaurantResult, 'direccion', 'direccion_iddireccion', 'iddireccion', (error, result) => {
+                DynamicQueries.addRelation(restaurantResult, 'direccion', 'direccion_iddireccion', 'iddireccion', 'direccion', (error, result) => {
                     return error ? next(error) : next(null, result)
                 })
             }
@@ -94,7 +94,7 @@ Restaurante.findByParam = (column, columnValue, next) => {
         },
         (restaurantes, next) => {
             // Add direccion relation to each restaurante
-            DynamicQueries.addRelation(restaurantes, 'direccion', 'direccion_iddireccion', 'iddireccion', (error, result) => {
+            DynamicQueries.addRelation(restaurantes, 'direccion', 'direccion_iddireccion', 'iddireccion', 'direccion', (error, result) => {
                 return error ? next(error) : next(null, result)
             })
         }
@@ -119,7 +119,7 @@ Restaurante.update = (restaurante, next) => {
     });
 };
 
-Restaurante.remove = (restauranteId, cb) => {
+Restaurante.remove = (restauranteId, next) => {
     if( connection ) {
         connection.query('DELETE FROM restaurante WHERE idrestaurante = ?', [restauranteId], (error, result) => {
             if(error) return next({ success: false, error: error, message: 'An error has happened while deleting table' });

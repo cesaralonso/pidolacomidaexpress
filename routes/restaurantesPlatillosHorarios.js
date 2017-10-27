@@ -13,9 +13,9 @@ router
         });
     })
     .get('/:idrestaurante/:idplatillo', (req, res, next) => {
-        const res_has_pla_restaurante_idrestaurante = req.params.idrestaurante;
-        const res_has_pla_platillo_idplatillo = req.params.idplatillo;
-        RestaurantePlatilloHorario.findById( res_has_pla_restaurante_idrestaurante, res_has_pla_platillo_idplatillo, (error, data) => {
+        const idrestaurante = req.params.idrestaurante;
+        const idplatillo = req.params.idplatillo;
+        RestaurantePlatilloHorario.findById( idrestaurante, idplatillo, (error, data) => {
             return RestaurantePlatilloHorario.response(res, error, data);
         });
     })
@@ -27,6 +27,14 @@ router
         }
         console.log(restaurantePlatilloHorario);
         RestaurantePlatilloHorario.insert( restaurantePlatilloHorario, (error, data) => {
+            return RestaurantePlatilloHorario.response(res, error, data);
+        });
+    })
+    .delete('/:idrestaurante/:idplatillo/:idhorario', (req, res, next) => {
+        const idrestaurante = req.params.idrestaurante;
+        const idplatillo = req.params.idplatillo;
+        const idhorario = req.params.idhorario;
+        RestaurantePlatilloHorario.remove( idrestaurante, idplatillo, idhorario, (error, data) => {
             return RestaurantePlatilloHorario.response(res, error, data);
         });
     })
