@@ -25,6 +25,36 @@ Oferta.findById = (ofertaId, next) => {
     });
 };
 
+Oferta.findByRestAndPlatId = (restauranteId, platilloId, next) => {
+    if ( !connection )
+        return next('Connection refused');
+    connection.query(`
+    SELECT * FROM oferta 
+    WHERE res_has_pla_restaurante_idrestaurante = ?
+    AND res_has_pla_platillo_idplatillo = ?`, 
+    [restauranteId, platilloId], (error, result) => {
+        if ( error )
+            return next({ success: false, error: error })
+        else
+            return next( null, { success: true, result: result[0] });
+    });
+}
+
+Oferta.removeByRestAndPlatId = (restauranteId, platilloId, next) => {
+    if ( !connection )
+        return next('Connection refused');
+    connection.query(`
+    DELETE FROM oferta 
+    WHERE res_has_pla_restaurante_idrestaurante = ?
+    AND res_has_pla_platillo_idplatillo = ?`, 
+    [restauranteId, platilloId], (error, result) => {
+        if ( error )
+            return next({ success: false, error: error })
+        else
+            return next( null, { success: true, result: result[0] });
+    });
+}
+
 Oferta.count = next => {
     if ( !connection )
         return next('Connection refused');

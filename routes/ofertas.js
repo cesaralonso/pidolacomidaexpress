@@ -17,6 +17,13 @@ router
             return Oferta.response(res, error, data);
         });
     })
+    .get('/findByIdRestAndPlat/:restauranteId/:platilloId', (req, res, next) => {
+        const restauranteId = req.params.restauranteId;
+        const platilloId = req.params.platilloId;
+        Oferta.findByRestAndPlatId( restauranteId, platilloId, (error, data) => {
+            return Oferta.response(res, error, data);
+        });
+    })
     .get('/:id', (req, res, next) => {
         const ofertaId = req.params.id;
         Oferta.findById( ofertaId, (error, data) => {
@@ -29,6 +36,13 @@ router
             return Oferta.response(res, error, data);
         });
     })
+    .delete('/:restauranteId/:platilloId', (req, res, next) => {
+        const restauranteId = req.params.restauranteId;
+        const platilloId = req.params.platilloId;
+        Oferta.removeByRestAndPlatId( restauranteId, platilloId, (error, data) => {
+            return Oferta.response(res, error, data);
+        });
+    })
     .patch('/', (req, res, next) => {
         const oferta = {
             idoferta: req.body.idoferta,
@@ -38,7 +52,6 @@ router
             fecha_ini: req.body.fecha_ini,
             fecha_fin: req.body.fecha_fin,
             precio: req.body.precio,
-            ofertacol: req.body.ofertacol,
             res_has_pla_restaurante_idrestaurante: req.body.res_has_pla_restaurante_idrestaurante,
             res_has_pla_platillo_idplatillo: req.body.res_has_pla_platillo_idplatillo,
         };
@@ -55,7 +68,6 @@ router
             fecha_ini: req.body.fecha_ini,
             fecha_fin: req.body.fecha_fin,
             precio: req.body.precio,
-            ofertacol: req.body.ofertacol,
             res_has_pla_restaurante_idrestaurante: req.body.res_has_pla_restaurante_idrestaurante,
             res_has_pla_platillo_idplatillo: req.body.res_has_pla_platillo_idplatillo,
         };
