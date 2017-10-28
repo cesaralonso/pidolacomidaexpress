@@ -76,5 +76,11 @@ router
             return Oferta.response(res, error, data);
         });
     })
+    .post('/image', (req, res, next) => {
+        console.log(req.body);
+        // Oferta.insert( oferta, (error, data) => {
+        //     return Oferta.response(res, error, data);
+        // });
+    })
 
 module.exports = router;
