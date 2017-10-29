@@ -111,7 +111,7 @@ Restaurante.findByParam = (column, columnValue, next) => {
 Restaurante.update = (restaurante, next) => {
     if ( !connection )
         return next('Connection refused');
-        connection.query('UPDATE restaurante SET ? WHERE idrestaurante = ?', [restaurante, restaurante.idrestaurante], (error, result) => {
+    connection.query('UPDATE restaurante SET ? WHERE idrestaurante = ?', [restaurante, restaurante.idrestaurante], (error, result) => {
         if ( error )
             return next({ success: false, error: error });
         else

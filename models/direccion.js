@@ -15,8 +15,8 @@ Direccion.all = next => {
 
 Direccion.findById = (direccionId, next) => {
     if ( !connection )
-        return next('Connection refused');
-        connection.query('SELECT * FROM direccion WHERE iddireccion = ?', 
+        return next('Connection refused');    
+    connection.query('SELECT * FROM direccion WHERE iddireccion = ?', 
         [direccionId], (error, result) => {
         if ( error )
             return next({ success: false, error: error })

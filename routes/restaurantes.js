@@ -41,7 +41,6 @@ router
         const restaurante = {
             idrestaurante: req.body.idrestaurante,
             descripcion: req.body.descripcion,
-            direccion_iddireccion: req.body.direccion_iddireccion,
             razon: req.body.razon,
             nombre: req.body.nombre,
         }
