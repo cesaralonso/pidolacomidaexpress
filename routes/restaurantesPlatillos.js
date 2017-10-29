@@ -45,7 +45,9 @@ router
             descripcion: req.body.descripcion,
             tiempopreparacion: req.body.tiempopreparacion
         };
+        console.log('Restaurante: ',restaurantePlatillo)
         RestaurantePlatillo.update( restaurantePlatillo, (error, data) => {
+            console.log(error)
             return RestaurantePlatillo.response(res, error, data);
         })
     })

@@ -73,10 +73,12 @@ RestaurantePlatillo.insert = (restaurantePlatillo, next) => {
 RestaurantePlatillo.update = (restaurantePlatillo, next) => {
     if ( !connection )
         return next('Connection refused');
-        connection.query('UPDATE restaurante_has_platillo SET ? WHERE restaurante_idrestaurante = ?', [restaurantePlatillo, restaurantePlatillo.idplatillo], (error, result) => {
+    connection.query(`
+    UPDATE restaurante_has_platillo SET ? WHERE restaurante_idrestaurante = ? AND platillo_idplatillo = ?`, 
+    [restaurantePlatillo, restaurantePlatillo.restaurante_idrestaurante, restaurantePlatillo.platillo_idplatillo], (error, result) => {
         if ( error )
             return next({ success: false, error: error });
-        else
+        else 
             return next( null, { success: true, result: result});
     });
 };
