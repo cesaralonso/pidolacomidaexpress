@@ -17,8 +17,9 @@ DynamicQuery.addRelation = (collection, tableToRelate, collectionColumnToRelate,
     async.each( collection, (item, nextIteration) => {
         connection.query(`SELECT * FROM ?? WHERE ?? = ?`,
         [tableToRelate, tableToRelateColumn, item[collectionColumnToRelate]], (error, result) => {
-            if ( error )
-                return next(error);
+            if ( error ) {
+                return nextIteration(error);
+            }
             else {
                 item[newRelationName] = result[0];
                 return nextIteration();
@@ -26,7 +27,7 @@ DynamicQuery.addRelation = (collection, tableToRelate, collectionColumnToRelate,
         })
     },
     err => {
-        if (err)
+        if (err) 
             return next(err);
         else
             return next(null, collection)
