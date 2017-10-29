@@ -62,3 +62,32 @@ INSERT INTO semana(idsemana) VALUES('JUEVES');
 INSERT INTO semana(idsemana) VALUES('VIERNES');
 INSERT INTO semana(idsemana) VALUES('SÁBADO');
 INSERT INTO semana(idsemana) VALUES('DOMINGO');
+
+
+-- -----------------------------------------------------
+-- Will be removed 
+-- -----------------------------------------------------
+CREATE TABLE comboNew(
+	idcombo INT(11) NOT NULL AUTO_INCREMENT,
+	restaurante_idrestaurante INT(11) NOT NULL,
+	nombre VARCHAR (45),
+	descripcion VARCHAR(205) NOT NULL,
+	precio FLOAT,
+	fecha_ini DATETIME,
+	fecha_fin DATETIME,
+	baja TINYINT(1),
+	created_at TIMESTAMP,
+	created_by INT(11),
+	PRIMARY KEY (idcombo),
+	FOREIGN KEY (restaurante_idrestaurante) REFERENCES restaurante(idrestaurante)
+)
+
+CREATE TABLE comboNew_has_platillo(
+	combo_idcombo INT(11) NOT NULL,
+	platillo_idplatillo INT(11) NOT NULL,
+	
+	PRIMARY KEY (combo_idcombo, platillo_idplatillo),
+	FOREIGN KEY (combo_idcombo) REFERENCES combo(idcombo),
+	FOREIGN KEY (platillo_idplatillo) REFERENCES platillo(idplatillo)
+	
+)
