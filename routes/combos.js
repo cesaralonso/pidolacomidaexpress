@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const passport = require('passport');
 const Combo = require('../models/combo');
 
 router
@@ -30,31 +31,42 @@ router
         });
     })
     .patch('/', (req, res, next) => {
-        const combo = {
-            idcombo: req.body.idcombo,
-            nombre: req.body.nombre,
-            descripcion: req.body.descripcion,
-            precio: req.body.precio,
-            fecha_ini: req.body.fecha_ini,
-            fecha_fin: req.body.fecha_fin,
-        };
-        Combo.update( combo, (error, data) => {
-            return Combo.response(res, error, data);
-        })
+        passport.authenticate('jwt', { session: false }, (err, user, info) => {
+            
+            const combo = {
+                idcombo: req.body.idcombo,
+                restaurante_idrestaurante: req.body.restaurante_idrestaurante,
+                nombre: req.body.nombre,
+                descripcion: req.body.descripcion,
+                precio: req.body.precio,
+                fecha_ini: req.body.fecha_ini,
+                fecha_fin: req.body.fecha_fin,
+            };            
+            Combo.update( combo, (error, data) => {
+                return Combo.response(res, error, data);
+            })
+        })(req, res, next);        
     })
     .post('/', (req, res, next) => {
-        const combo = {
-            idcombo: null,
-            nombre: req.body.nombre,
-            descripcion: req.body.descripcion,
-            precio: req.body.precio,
-            fecha_ini: req.body.fecha_ini,
-            fecha_fin: req.body.fecha_fin,
-        };
-        console.log(combo);
-        Combo.insert( combo, (error, data) => {
-            return Combo.response(res, error, data);
-        });
+        passport.authenticate('jwt', { session: false }, (err, user, info) => {
+            
+            const combo = {
+                idcombo: null,
+                restaurante_idrestaurante: req.body.restaurante_idrestaurante,
+                nombre: req.body.nombre,
+                descripcion: req.body.descripcion,
+                precio: req.body.precio,
+                fecha_ini: req.body.fecha_ini,
+                fecha_fin: req.body.fecha_fin,
+                created_by: user.iduser,
+            };
+            const platillos = req.body.platillos;
+            
+            console.log(combo);
+            Combo.insert( combo, platillos, (error, data) => {
+                return Combo.response(res, error, data);
+            });
+        })(req, res, next);
     })
 
 module.exports = router;
