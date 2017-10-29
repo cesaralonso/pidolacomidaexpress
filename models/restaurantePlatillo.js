@@ -1,4 +1,6 @@
 const connection = require('../config/db-connection');
+const async = require('async');
+const DynamicQueries = require('../services/dynamic-queries');
 
 const RestaurantePlatillo = {};
 
@@ -27,11 +29,24 @@ RestaurantePlatillo.findById = (restaurantePlatilloId, next) => {
 
 RestaurantePlatillo.findByParam = (column, param, next) => {
     if ( connection ) {
-        connection.query(`SELECT * FROM restaurante_has_platillo WHERE ?? = ?`, [column, param], (error, result) => {
-        if ( error )
-            return next({ success: false, error: error })
-        else
-            return next( null, { success: true, result: result });
+        async.waterfall([
+            next => {
+                connection.query(`SELECT * FROM restaurante_has_platillo WHERE ?? = ?`, [column, param], (error, result) => {
+                    error ? next(error) : next(null, result)
+                })
+            },
+            (result, next) => {
+                DynamicQueries.addRelation(result, 'platillo', 'platillo_idplatillo', 'idplatillo', 'platilloInfo', (error, result) => {
+                    error ? next(error) : next(null, result);
+                })
+            }
+
+        ],
+        (error, result) => {
+            if ( error )
+                return next({ success: false, error: error })
+            else
+                return next( null, { success: true, result: result });
         })
     }
 }
