@@ -88,7 +88,6 @@ PlatilloHorario.insert = (restaurantePlatilloHorario, next) => {
 
 PlatilloHorario.remove = (platilloHorarioDelete, next) => {
     if( connection ) {
-        console.log(platilloHorarioDelete)
         connection.query(`
             DELETE FROM platilloHorario 
             WHERE platillo_idplatillo = ? 
@@ -96,13 +95,14 @@ PlatilloHorario.remove = (platilloHorarioDelete, next) => {
             AND hora_fin = ?
             AND semana_idsemana = ?`, 
             [platilloHorarioDelete.platillo_idplatillo, 
-             platilloHorarioDelete.horario_ini, 
-             platilloHorarioDelete.horario_fin, 
+             platilloHorarioDelete.hora_ini, 
+             platilloHorarioDelete.hora_fin, 
              platilloHorarioDelete.semana_idsemana], (error, result) => {
             if(error) return next({ success: false, error: error, message: 'An error has happened while deleting table' });
-            console.log(result)
             return next(null, { success: true, result: result, message: 'Horario eliminado!' });
         });
+    } else {
+        return next('Connection refused');
     }
 };
 
