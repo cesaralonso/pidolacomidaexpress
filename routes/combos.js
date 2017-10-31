@@ -18,6 +18,19 @@ router
             return Combo.response(res, error, data);
         });
     })
+    .get('/getByParam/:column/:param', (req, res, next) => {
+        const column = req.params.column;
+        const param = req.params.param;
+        Combo.findByParam( column, param, (error, data) => {
+            return Combo.response(res, error, data);
+        });
+    })
+    .get('/idWithPlatillos/:idcombo', (req, res, next) => {
+        const comboId = req.params.idcombo;
+        Combo.findByIdWithPlatillos( comboId, (error, data) => {
+            return Combo.response(res, error, data);
+        });
+    })
     .get('/:id', (req, res, next) => {
         const comboId = req.params.id;
         Combo.findById( comboId, (error, data) => {
@@ -51,19 +64,21 @@ router
         passport.authenticate('jwt', { session: false }, (err, user, info) => {
             
             const combo = {
-                idcombo: null,
-                restaurante_idrestaurante: req.body.restaurante_idrestaurante,
+                idcombo: null,                
                 nombre: req.body.nombre,
                 descripcion: req.body.descripcion,
                 precio: req.body.precio,
-                fecha_ini: req.body.fecha_ini,
-                fecha_fin: req.body.fecha_fin,
+                fecha_ini: req.body.fechaIni,
+                fecha_fin: req.body.fechaFin,
                 created_by: user.iduser,
             };
+            // Contains an object array with all platillos and its quantity
             const platillos = req.body.platillos;
-            
+
+            const restauranteId = req.body.restaurante_idrestaurante;
             console.log(combo);
-            Combo.insert( combo, platillos, (error, data) => {
+            Combo.insert( combo, platillos, restauranteId, (error, data) => {
+                console.log(error);
                 return Combo.response(res, error, data);
             });
         })(req, res, next);
