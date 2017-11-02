@@ -7,7 +7,7 @@ const Combo = {};
 Combo.all = next => {
     if ( !connection )
         return next('Connection refused');
-    connection.query('SELECT * FROM combo', (error, result) => {
+    connection.query('SELECT * FROM combo HAVING baja IS NULL OR baja = false', (error, result) => {
         if ( error )
             return next({ success: false, error: error })
         else
@@ -18,7 +18,7 @@ Combo.all = next => {
 Combo.findById = (comboId, next) => {
     if ( !connection )
         return next('Connection refused');
-    connection.query('SELECT * FROM combo WHERE idcombo = ?', 
+    connection.query('SELECT * FROM combo WHERE idcombo = ? HAVING baja IS NULL OR baja = false', 
         [comboId], (error, result) => {
         if ( error )
             return next({ success: false, error: error })
@@ -30,7 +30,7 @@ Combo.findById = (comboId, next) => {
 Combo.findByParam = (column, columnValue, next) => {
     if ( !connection )
         return next('Connection refused');
-    connection.query(`SELECT * FROM combo WHERE ?? = ?`, [column, columnValue], (error, result) => {
+    connection.query(`SELECT * FROM combo WHERE ?? = ? HAVING baja IS NULL OR baja = false`, [column, columnValue], (error, result) => {
         if ( error )
             return next({ success: false, error: error });
         else
@@ -43,7 +43,7 @@ Combo.findByIdWithPlatillos = (comboId, next) => {
         return next('Connection refused');
     async.waterfall([
         next => {
-            connection.query(`SELECT * FROM combo WHERE idcombo = ?`,
+            connection.query(`SELECT * FROM combo WHERE idcombo = ? HAVING baja IS NULL OR baja = false`,
             [comboId], (error, result) => {
                 error ? next(error) : next(null, result)
             })
@@ -75,7 +75,7 @@ Combo.findByIdWithPlatillos = (comboId, next) => {
 Combo.count = next => {
     if ( !connection )
         return next('Connection refused');
-    connection.query(`SELECT COUNT(idcombo) AS count FROM combo`, (error, result) => {
+    connection.query(`SELECT COUNT(idcombo) AS count FROM combo WHERE baja = false`, (error, result) => {
         if ( error )
             return next({ success: false, error: error })
         else

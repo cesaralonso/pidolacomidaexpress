@@ -75,12 +75,16 @@ router
                 fecha_ini: req.body.fechaIni,
                 fecha_fin: req.body.fechaFin,
                 created_by: user.iduser,
+                baja: false
             };
+            
             // Contains an object array with all platillos and its quantity
             const platillos = req.body.platillos;
 
             const restauranteId = req.body.restaurante_idrestaurante;
+            combo.restaurante_idrestaurante = restauranteId;
             console.log(combo);
+            
             Combo.insert( combo, platillos, restauranteId, (error, data) => {
                 console.log(error);
                 return Combo.response(res, error, data);
