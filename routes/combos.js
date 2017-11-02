@@ -52,10 +52,14 @@ router
                 nombre: req.body.nombre,
                 descripcion: req.body.descripcion,
                 precio: req.body.precio,
-                fecha_ini: req.body.fecha_ini,
-                fecha_fin: req.body.fecha_fin,
-            };            
-            Combo.update( combo, (error, data) => {
+                fecha_ini: req.body.fechaIni,
+                fecha_fin: req.body.fechaFin,
+            };
+            // Contains an object array with all platillos and its quantity
+            const platillos = req.body.platillos;
+            console.log(combo);
+            console.log(platillos);
+            Combo.update( combo, platillos, (error, data) => {
                 return Combo.response(res, error, data);
             })
         })(req, res, next);        

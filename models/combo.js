@@ -134,15 +134,55 @@ Combo.insert = (combo, platillos, restauranteId, next) => {
     })
 };
 
-Combo.update = (combo, next) => {
+Combo.update = (combo, platillos, next) => {
     if ( !connection )
         return next('Connection refused');
-    connection.query('UPDATE combo SET ? WHERE idcombo = ?', [combo, combo.idcombo], (error, result) => {
-        if ( error )
-            return next({ success: false, error: error });
-        else
-            return next( null, { success: true, result: result});
-    });
+    connection.beginTransaction( err => {
+        async.waterfall([
+            next => {
+                connection.query(`
+                UPDATE combo SET ? WHERE idcombo = ?`,
+                [combo, combo.idcombo], (error, result) => {
+                    error ? next(error) : next(null, result)
+                });
+            },
+            (result, next) => {
+                const platilloInsert = { 
+                    combo_idcombo: combo.idcombo,
+                    res_has_platillo_res_idrestaurante: combo.restaurante_idrestaurante,
+                }
+                async.each(platillos, (platillo, nextIteration) => {
+                    platilloInsert.res_has_pla_platillo_idplatillo = platillo.idplatillo;
+                    platilloInsert.cantidad = platillo.cantidad;
+                    
+                    connection.query(`
+                    UPDATE combo_has_restaurante_has_platillo SET ? 
+                    WHERE combo_idcombo = ? AND res_has_platillo_res_idrestaurante = ? AND res_has_pla_platillo_idplatillo = ?`,
+                    [platilloInsert, platilloInsert.combo_idcombo, platilloInsert.res_has_platillo_res_idrestaurante, platilloInsert.res_has_pla_platillo_idplatillo], (error, result) => {
+                        error ? nextIteration(error) : nextIteration();
+                    });
+                }, (error) => error ? next(error) : next(null, result) )
+            }
+        ],
+        (error, result) => {
+            if ( error )
+                connection.rollback( () => next({ success: false, error: error }) )
+            else 
+                connection.commit( err => {
+                    err 
+                    ? next({ success: false, error: error })
+                    : next( null, { success: true, result: result })
+                })
+        })
+
+    })
+    // connection.query('UPDATE combo SET ? WHERE idcombo = ?', [combo, combo.idcombo], (error, result) => {
+    //     if ( error )
+    //         return next({ success: false, error: error });
+    //     else
+    //         return next( null, { success: true, result: result});
+    // });
+    // next(null, 'gg')
 };
 
 Combo.remove = (comboId, next) => {
