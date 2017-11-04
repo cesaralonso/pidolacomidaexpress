@@ -2,8 +2,10 @@ const router = require('express').Router();
 const PlatilloIngrediente = require('../models/platilloIngrediente');
 
 router
-    .get('/', (req, res, next) => {
-        PlatilloIngrediente.all( (error, data) => {
+    .get('/:restauranteId/:platilloId', (req, res) => {
+        const restauranteId = req.params.restauranteId;
+        const platilloId = req.params.platilloId;
+        PlatilloIngrediente.all( restauranteId, platilloId, (error, data) => {
             return PlatilloIngrediente.response(res, error, data);
         });
     })

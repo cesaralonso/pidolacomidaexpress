@@ -4,13 +4,15 @@ const DynamicQueries = require('../services/dynamic-queries');
 
 const PlatilloIngrediente = { };
 // Modificar este metodo, ya que se necesita el res_has_pla_restaurante_idrestaurante y res_has_pla_platillo_idplatillo
-PlatilloIngrediente.all = (next) => {
+PlatilloIngrediente.all = (restauranteId, platilloId, next) => {
     if ( !connection )
         return next('Connection refused');
     async.waterfall([
         next => {
             connection.query(`
-            SELECT * FROM restaurante_platillo_ingrediente WHERE res_has_pla_restaurante_idrestaurante = ? AND res_has_pla_platillo_idplatillo = ?`,
+            SELECT * FROM restaurante_platillo_ingrediente
+            WHERE res_has_pla_restaurante_idrestaurante = ? AND res_has_pla_platillo_idplatillo = ?`,
+            [restauranteId, platilloId],
             (error, result) => {
                 error ? next(error) : next(null, result)
             });
