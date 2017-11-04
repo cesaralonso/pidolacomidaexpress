@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
 const passport = require('passport');
+const multer = require('multer');
+const dir = './uploads/';
+const fs = require('fs');
 
 //Route importation.
 const rol = require('./routes/roles');
@@ -32,7 +35,24 @@ const platilloIngrediente = require('./routes/platillosIngredientes');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: true,
+    credentials: true,
+    allowedHeaders: ['Authorization', 'Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'X-CSRF-TOKEN', 'XMLHttpRequest'],
+    methods: ['GET','POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
+}));
+app.use(multer({
+    dest: dir,
+    rename: (fieldname, filename) => {
+      return filename + 'anuma';
+    },
+    onFileUploadStart: function (file) {
+      console.log(file.originalname + ' is starting ...');
+    },
+    onFileUploadComplete: function (file) {
+      console.log(file.fieldname + ' uploaded to  ' + file.path);
+    }
+}).any());
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 
