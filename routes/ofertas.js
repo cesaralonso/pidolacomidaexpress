@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const Oferta = require('../models/oferta');
+const multer  = require('multer');
+const upload = multer({ dest: './uploads/' }).any();
 
 router
     .get('/', (req, res, next) => {
@@ -76,11 +78,15 @@ router
             return Oferta.response(res, error, data);
         });
     })
-    .post('/image', (req, res, next) => {
-        console.log(req.body);
-        // Oferta.insert( oferta, (error, data) => {
-        //     return Oferta.response(res, error, data);
-        // });
+    .post('/image', (req, res) => {
+        upload(req, res, function (err) {
+            if (err) {
+                // Handle error
+                return res.end(err.toString());
+            }
+            // Everything went fine
+            res.end('File is uploaded');
+        });
     })
 
 module.exports = router;
