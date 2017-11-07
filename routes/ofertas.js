@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const Oferta = require('../models/oferta');
-const multer  = require('multer');
-const upload = multer({ dest: './uploads/' }).any();
+const ImageSaving = require('../middleware/image-saving');
 
 router
     .get('/', (req, res, next) => {
@@ -79,14 +78,9 @@ router
         });
     })
     .post('/image', (req, res) => {
-        upload(req, res, function (err) {
-            if (err) {
-                // Handle error
-                return res.end(err.toString());
-            }
-            // Everything went fine
-            res.end('File is uploaded');
-        });
+        ImageSaving.save(req, res, { dir: './public/uploads/' }, (error, data) => {
+            return Oferta.response(res, error, data);
+        })
     })
 
 module.exports = router;
