@@ -11,6 +11,7 @@ const fs = require('fs');
 const rol = require('./routes/roles');
 const user = require('./routes/users');
 const pago = require('./routes/pagos');
+const image = require('./routes/images');
 const combo = require('./routes/combos');
 const orden = require('./routes/ordenes');
 const oferta = require('./routes/ofertas');
@@ -25,9 +26,9 @@ const tipoComida = require('./routes/tipoComidas');
 const enfermedad = require('./routes/enfermedades');
 const ingrediente = require('./routes/ingredientes');
 const restaurante = require('./routes/restaurantes');
+const platilloHorario = require('./routes/platillosHorarios');
 const platilloOrdenado = require('./routes/platillosOrdenados');
 const restaurantePlatillo = require('./routes/restaurantesPlatillos');
-const platilloHorario = require('./routes/platillosHorarios');
 const platilloIngrediente = require('./routes/platillosIngredientes');
 
 // Express Instance
@@ -53,6 +54,7 @@ app.use('/user', user);
 app.use('/pago', pago);
 app.use('/orden', orden);
 app.use('/combo', combo);
+app.use('/image', image);
 app.use('/oferta', oferta);
 app.use('/estado', estado);
 app.use('/ciudad', ciudad);
@@ -65,9 +67,9 @@ app.use('/enfermedad', enfermedad);
 app.use('/tipoComida', tipoComida);
 app.use('/ingrediente', ingrediente);
 app.use('/restaurante', restaurante);
+app.use('/platilloHorario', platilloHorario);
 app.use('/platilloOrdenado', platilloOrdenado);
 app.use('/restaurantePlatillo', restaurantePlatillo);
-app.use('/platilloHorario', platilloHorario);
 app.use('/platilloIngrediente', platilloIngrediente);
 
 // Set port
