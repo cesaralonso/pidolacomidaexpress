@@ -31,7 +31,9 @@ RestaurantePlatillo.findByParam = (column, param, next) => {
     if ( connection ) {
         async.waterfall([
             next => {
-                connection.query(`SELECT * FROM restaurante_has_platillo WHERE ?? = ?`, [column, param], (error, result) => {
+                const query = connection.query(`
+                SELECT * FROM restaurante_has_platillo WHERE ?? = ?
+                `, [column, param], (error, result) => {
                     error ? next(error) : next(null, result)
                 })
             },
@@ -43,8 +45,10 @@ RestaurantePlatillo.findByParam = (column, param, next) => {
 
         ],
         (error, result) => {
-            if ( error )
+            if ( error ) {
+                console.log(error)
                 return next({ success: false, error: error })
+            }
             else
                 return next( null, { success: true, result: result });
         })
