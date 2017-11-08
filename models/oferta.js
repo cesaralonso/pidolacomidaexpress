@@ -1,11 +1,13 @@
 const connection = require('../config/db-connection');
+const { waterfall } = require('async');
+const DynamicQueries = require('../services/dynamic-queries');
 
 const Oferta = {};
 
 Oferta.all = next => {
     if ( !connection )
         return next('Connection refused');
-        connection.query('SELECT * FROM oferta', (error, result) => {
+    connection.query('SELECT * FROM oferta', (error, result) => {
         if ( error )
             return next({ success: false, error: error })
         else
@@ -16,7 +18,7 @@ Oferta.all = next => {
 Oferta.findById = (ofertaId, next) => {
     if ( !connection )
         return next('Connection refused');
-        connection.query('SELECT * FROM oferta WHERE idoferta = ?', 
+    connection.query('SELECT * FROM oferta WHERE idoferta = ?', 
         [ofertaId], (error, result) => {
         if ( error )
             return next({ success: false, error: error })
@@ -28,16 +30,29 @@ Oferta.findById = (ofertaId, next) => {
 Oferta.findByRestAndPlatId = (restauranteId, platilloId, next) => {
     if ( !connection )
         return next('Connection refused');
-    connection.query(`
-    SELECT * FROM oferta 
-    WHERE res_has_pla_restaurante_idrestaurante = ?
-    AND res_has_pla_platillo_idplatillo = ?`, 
-    [restauranteId, platilloId], (error, result) => {
+    waterfall([
+        next => {
+            connection.query(`
+            SELECT * FROM oferta
+            WHERE res_has_pla_restaurante_idrestaurante = ?
+            AND res_has_pla_platillo_idplatillo = ?`, 
+            [restauranteId, platilloId], (error, ofertaResult) => {
+                error ? next(error) : next(null, ofertaResult)
+            });
+        },
+        (ofertaResult, next) => {
+            DynamicQueries.addRelation( ofertaResult, 'image', 'image_idimage', 'idimage', 'image', (error, result) => {
+                error ? next(error) : next(null, result)
+            })
+        }
+    ],
+    (error, result) => {
         if ( error )
             return next({ success: false, error: error })
         else
             return next( null, { success: true, result: result[0] });
-    });
+    })
+
 }
 
 Oferta.removeByRestAndPlatId = (restauranteId, platilloId, next) => {
@@ -58,7 +73,7 @@ Oferta.removeByRestAndPlatId = (restauranteId, platilloId, next) => {
 Oferta.count = next => {
     if ( !connection )
         return next('Connection refused');
-        connection.query(`SELECT COUNT(idoferta) AS count FROM oferta`, (error, result) => {
+    connection.query(`SELECT COUNT(idoferta) AS count FROM oferta`, (error, result) => {
         if ( error )
             return next({ success: false, error: error })
         else
@@ -81,7 +96,7 @@ Oferta.exist = (ofertaId, next) => {
 Oferta.insert = (oferta, next) => {
     if ( !connection )
         return next('Connection refused');
-        connection.query(`INSERT INTO oferta SET ?`, [oferta], (error, result) => {
+    connection.query(`INSERT INTO oferta SET ?`, [oferta], (error, result) => {
         if ( error ) 
             return next({ success: false, error: error })
         else 
@@ -89,10 +104,12 @@ Oferta.insert = (oferta, next) => {
     });
 };
 
-Oferta.update = (oferta, next) => {
+Oferta.update = (idoferta, oferta, next) => {
     if ( !connection )
         return next('Connection refused');
-        connection.query('UPDATE oferta SET ? WHERE idoferta = ?', [oferta, oferta.idoferta], (error, result) => {
+    const q = connection.query('UPDATE oferta SET ? WHERE idoferta = ?',
+    [oferta, idoferta], (error, result) => {
+        console.log(q.sql)
         if ( error )
             return next({ success: false, error: error });
         else

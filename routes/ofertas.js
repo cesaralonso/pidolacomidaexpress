@@ -44,19 +44,11 @@ router
             return Oferta.response(res, error, data);
         });
     })
-    .patch('/', (req, res, next) => {
-        const oferta = {
-            idoferta: req.body.idoferta,
-            nombre: req.body.nombre,
-            descripcion: req.body.descripcion,
-            tipo: req.body.tipo,
-            fecha_ini: req.body.fecha_ini,
-            fecha_fin: req.body.fecha_fin,
-            precio: req.body.precio,
-            res_has_pla_restaurante_idrestaurante: req.body.res_has_pla_restaurante_idrestaurante,
-            res_has_pla_platillo_idplatillo: req.body.res_has_pla_platillo_idplatillo,
-        };
-        Oferta.update( oferta, (error, data) => {
+    .patch('/:id', (req, res, next) => {
+        const ofertaId = req.params.id;
+        const oferta = req.body;
+        console.log(ofertaId)
+        Oferta.update( ofertaId, oferta, (error, data) => {
             return Oferta.response(res, error, data);
         })
     })
@@ -79,6 +71,7 @@ router
     })
     .post('/image', (req, res) => {
         ImageSaving.save(req, res, { dir: './public/uploads/' }, (error, data) => {
+            console.log(error)
             return Oferta.response(res, error, data);
         })
     })
