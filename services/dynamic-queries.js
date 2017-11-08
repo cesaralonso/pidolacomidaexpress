@@ -4,9 +4,10 @@ const connection = require('../config/db-connection');
 const DynamicQuery = { };
 /**
  * @param collection => The collection that it will have a new relation included for each of its elements
- * @param tableToRelate => Table to get the relation
- * @param collectionColumnToRelate => Column of @collections to relate
- * @param tableToRelateColumn => Column of @tableToRelate to relate
+ * @param tableToRelate => Table name to get the relation
+ * @param collectionColumnToRelate => Column name of @collections to relate
+ * @param tableToRelateColumn => Column name of @tableToRelate to relate
+ * @param newRelationName => Name of the new realtion
  * @param next => Callback
  * 
  * Given a table, set a relation to a collection
