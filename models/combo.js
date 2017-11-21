@@ -91,7 +91,6 @@ Combo.exist = (comboId, next) => {
             return next({ success: false, error: error })
         else
             return next( null, { success: true, result: result[0] });
-
     })
 };
 
@@ -133,7 +132,17 @@ Combo.insert = (combo, platillos, restauranteId, next) => {
 
     })
 };
+// Using simple update for changing baja state
+Combo.simpleUpdate = ( comboId, options, next ) =>  {
+    if ( !connection ) return next('Connection refused');
 
+    connection.query('UPDATE combo SET ? WHERE idcombo = ?',[options, comboId], (error, result) => {
+        if ( error )
+            return next({ success: false, error: error })
+        else
+            return next( null, { success: true, result: result });
+    })
+}
 Combo.update = (combo, platillos, next) => {
     if ( !connection )
         return next('Connection refused');
@@ -176,13 +185,6 @@ Combo.update = (combo, platillos, next) => {
         })
 
     })
-    // connection.query('UPDATE combo SET ? WHERE idcombo = ?', [combo, combo.idcombo], (error, result) => {
-    //     if ( error )
-    //         return next({ success: false, error: error });
-    //     else
-    //         return next( null, { success: true, result: result});
-    // });
-    // next(null, 'gg')
 };
 
 Combo.remove = (comboId, next) => {
@@ -198,7 +200,7 @@ Combo.response = (res, error, data) => {
     if ( error )
         res.status(500).json(error);
     else 
-        res.status(200).json(data);
+       res.status(200).json(data);
 };
 
 module.exports = Combo;

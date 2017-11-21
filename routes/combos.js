@@ -43,6 +43,16 @@ router
             return Combo.response(res, error, data);
         });
     })
+    .patch('/:id', (req, res) => {
+        passport.authenticate('jwt', { session: false }, (err, user, info) => {
+            const comboId = req.params.id;
+            const options = req.body;
+            Combo.simpleUpdate( comboId, options, (error, data) =>
+                Combo.response(res, error, data)
+            )
+        })(req, res);        
+            
+    })
     .patch('/', (req, res, next) => {
         passport.authenticate('jwt', { session: false }, (err, user, info) => {
             

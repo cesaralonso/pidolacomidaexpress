@@ -22,7 +22,7 @@ DynamicQuery.addRelation = (collection, tableToRelate, collectionColumnToRelate,
                 return nextIteration(error);
             }
             else {
-                item[newRelationName] = result[0];
+                item[newRelationName] = result;
                 return nextIteration();
             }
         })
